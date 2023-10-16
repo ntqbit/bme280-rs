@@ -75,7 +75,7 @@ pub mod spi;
 use core::future::Future;
 use core::marker::PhantomData;
 #[cfg(feature = "sync")]
-use embedded_hal::delay::blocking::DelayUs;
+use embedded_hal::delay::DelayUs;
 #[cfg(feature = "async")]
 use embedded_hal_async::delay::DelayUs as AsyncDelayUs;
 
@@ -587,7 +587,7 @@ where
         self.interface
             .write_register(BME280_RESET_ADDR, BME280_SOFT_RESET_CMD)
             .await?;
-        delay.delay_ms(2).await.map_err(|_| Error::Delay)?; // startup time is 2ms
+        delay.delay_ms(2).await; // startup time is 2ms
         Ok(())
     }
 
@@ -688,7 +688,7 @@ where
         delay: &mut D,
     ) -> Result<Measurements<I::Error>, Error<I::Error>> {
         self.forced(delay).await?;
-        delay.delay_ms(40).await.map_err(|_| Error::Delay)?; // await measurement
+        delay.delay_ms(40).await; // await measurement
         let measurements = self.interface.read_data(BME280_DATA_ADDR).await?;
         match self.calibration.as_mut() {
             Some(calibration) => {
