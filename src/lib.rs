@@ -20,7 +20,7 @@
 #![cfg_attr(not(feature = "with_std"), no_std)]
 #![cfg_attr(
     feature = "async",
-    feature(generic_associated_types),
+    feature(impl_trait_in_assoc_type),
     feature(type_alias_impl_trait)
 )]
 
